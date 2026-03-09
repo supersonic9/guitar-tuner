@@ -1,0 +1,121 @@
+:root {
+  --color-in-tune: #22c55e;   /* green */
+  --color-close:   #eab308;   /* yellow */
+  --color-off:     #ef4444;   /* red */
+  --color-idle:    #4b5563;   /* grey */
+  --bg:            #111827;
+  --surface:       #1f2937;
+  --text:          #f9fafb;
+  --text-muted:    #9ca3af;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: min(360px, 90vw);
+}
+
+/* Start / Stop button */
+#btn-toggle {
+  background: var(--surface);
+  color: var(--text);
+  border: 2px solid var(--color-idle);
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+#btn-toggle:hover {
+  background: #374151;
+}
+
+#btn-toggle.active {
+  border-color: var(--color-in-tune);
+}
+
+/* Note display */
+#note-display {
+  font-size: 6rem;
+  font-weight: 700;
+  line-height: 1;
+  min-height: 1em;
+  letter-spacing: -0.02em;
+  opacity: 1;
+}
+
+#note-display.fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Tuner bar + needle */
+#tuner-bar {
+  width: 100%;
+  height: 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+#needle {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--color-idle);
+  transform: translateX(0%);
+  /* needle moves relative to its own width from center */
+  margin-left: -2px;
+  transition: transform 0.08s ease-out, background-color 0.15s ease;
+}
+
+/* Centre tick mark */
+#tuner-bar::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  width: 2px;
+  height: calc(100% + 8px);
+  background: var(--text-muted);
+  opacity: 0.4;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Cents readout */
+#cents-display {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-height: 1.5em;
+}
