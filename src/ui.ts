@@ -16,15 +16,16 @@ export function updateDisplay(note: string | null, cents: number | null): void {
   }
 
   if (cents === null || note === null) {
-    needle.style.transform = 'translateX(0%)';
+    needle.style.transform = 'rotate(0deg)';
     needle.style.backgroundColor = 'var(--color-idle)';
     centsDisplay.textContent = '— cents';
     return;
   }
 
-  // Clamp to ±50 cents range and map to ±100% translation
+  // Clamp to ±50 cents range and map to ±60° rotation (matching 120° arc span)
   const clamped = Math.max(-50, Math.min(50, cents));
-  needle.style.transform = `translateX(${(clamped / 50) * 100}%)`;
+  const angle = (clamped / 50) * 60;
+  needle.style.transform = `rotate(${angle}deg)`;
 
   // Color by accuracy
   const abs = Math.abs(cents);
