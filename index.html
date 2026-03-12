@@ -7,61 +7,20 @@
   </head>
   <body>
     <div id="app">
-      <div id="dial-face">
-        <svg id="dial-svg" viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
-
-          <!-- Zone arcs: red / yellow / green / yellow / red -->
-          <!-- -50¢ to -20¢: 210° → 246° -->
-          <path d="M 46.1 95 A 120 120 0 0 1 101.2 45.4"
-                fill="none" stroke="#e74c3c" stroke-width="12" stroke-linecap="round"/>
-          <!-- -20¢ to -5¢: 246° → 264° -->
-          <path d="M 101.2 45.4 A 120 120 0 0 1 137.5 35.7"
-                fill="none" stroke="#f39c12" stroke-width="12" stroke-linecap="round"/>
-          <!-- -5¢ to +5¢: 264° → 276° (green, slightly wider stroke) -->
-          <path d="M 137.5 35.7 A 120 120 0 0 1 162.5 35.7"
-                fill="none" stroke="#27ae60" stroke-width="16" stroke-linecap="round"/>
-          <!-- +5¢ to +20¢: 276° → 294° -->
-          <path d="M 162.5 35.7 A 120 120 0 0 1 198.8 45.4"
-                fill="none" stroke="#f39c12" stroke-width="12" stroke-linecap="round"/>
-          <!-- +20¢ to +50¢: 294° → 330° -->
-          <path d="M 198.8 45.4 A 120 120 0 0 1 253.9 95"
-                fill="none" stroke="#e74c3c" stroke-width="12" stroke-linecap="round"/>
-
-          <!-- Tick marks at every 10¢ -->
-          <!-- -50¢ at 210° -->
-          <line x1="46.1"  y1="95"   x2="56.5"  y2="101"  stroke="#5c3d1e" stroke-width="2"   stroke-linecap="round"/>
-          <!-- -40¢ at 222° -->
-          <line x1="60.8"  y1="74.7" x2="69.7"  y2="82.7" stroke="#5c3d1e" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- -30¢ at 234° -->
-          <line x1="79.5"  y1="57.9" x2="86.5"  y2="67.6" stroke="#5c3d1e" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- -20¢ at 246° -->
-          <line x1="101.2" y1="45.4" x2="106.1" y2="56.3" stroke="#5c3d1e" stroke-width="2"   stroke-linecap="round"/>
-          <!-- -10¢ at 258° -->
-          <line x1="125.1" y1="37.6" x2="127.5" y2="49.4" stroke="#5c3d1e" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- 0¢ at 270° (centre, longer) -->
-          <line x1="150"   y1="35"   x2="150"   y2="58"   stroke="#5c3d1e" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- +10¢ at 282° -->
-          <line x1="174.9" y1="37.6" x2="172.5" y2="49.4" stroke="#5c3d1e" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- +20¢ at 294° -->
-          <line x1="198.8" y1="45.4" x2="193.9" y2="56.3" stroke="#5c3d1e" stroke-width="2"   stroke-linecap="round"/>
-          <!-- +30¢ at 306° -->
-          <line x1="220.5" y1="57.9" x2="213.5" y2="67.6" stroke="#5c3d1e" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- +40¢ at 318° -->
-          <line x1="239.2" y1="74.7" x2="230.3" y2="82.7" stroke="#5c3d1e" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- +50¢ at 330° -->
-          <line x1="253.9" y1="95"   x2="243.5" y2="101"  stroke="#5c3d1e" stroke-width="2"   stroke-linecap="round"/>
-
-        </svg>
-
-        <!-- Needle: CSS div rotated around its base (arc centre) -->
-        <div id="needle"></div>
-
-        <!-- Note name centred in lower half of dial -->
-        <div id="note-display">—</div>
+      <div id="note-display">—</div>
+      <div id="tuner-wrap">
+        <div id="tuner-bar">
+          <div id="center-mark"></div>
+          <div id="bar-needle"></div>
+        </div>
+        <div id="bar-labels">
+          <span>♭ flat</span>
+          <span>in tune</span>
+          <span>sharp ♯</span>
+        </div>
       </div>
-
-      <div id="cents-display">— cents</div>
-      <button id="btn-toggle">Start Tuning</button>
+      <div id="cents-display">—</div>
+      <button id="btn-toggle">START TUNING</button>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

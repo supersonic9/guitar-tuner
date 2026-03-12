@@ -1,13 +1,12 @@
 :root {
-  --bg:            #1a1410;   /* very dark warm charcoal */
-  --dial-face:     #f5f0e8;   /* warm cream/ivory */
-  --dial-border:   #8b7355;   /* aged brass */
-  --text-dark:     #2c1f10;   /* dark brown for labels on cream */
-  --needle-col:    #c0392b;   /* deep red needle */
-  --color-in-tune: #27ae60;
-  --color-close:   #f39c12;
-  --color-off:     #e74c3c;
-  --color-idle:    #7a6545;
+  --bg:            #0d0d0d;
+  --surface:       #1a1a1a;
+  --text:          #888;
+  --accent:        #444;
+  --accent-glow:   rgba(68, 68, 68, 0.3);
+  --color-in-tune: #00e5ff;
+  --color-close:   #ffab00;
+  --color-off:     #ff1744;
 }
 
 *, *::before, *::after {
@@ -17,9 +16,16 @@
 }
 
 body {
-  background: var(--bg);
-  color: var(--dial-face);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  background-color: var(--bg);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.45) 3px,
+    rgba(0, 0, 0, 0.45) 4px
+  );
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -30,140 +36,151 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2.5rem;
+  width: min(480px, 90vw);
 }
 
-/* ── Dial face ── */
-#dial-face {
-  position: relative;
-  width: min(300px, 90vw);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--dial-face);
-  border: 4px solid var(--dial-border);
-  box-shadow:
-    0 0 0 2px #3d2b0e,
-    0 8px 32px rgba(0, 0, 0, 0.7),
-    inset 0 2px 10px rgba(0, 0, 0, 0.18);
-  overflow: hidden;
-}
-
-/* SVG fills the top portion of the dial */
-#dial-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-}
-
-/* ── Needle ──
-   The dial SVG viewBox is 300×160. The dial face is aspect-ratio:1, so
-   its height equals its width. The SVG is width:100%, height:auto.
-
-   SVG height as % of dial height = 160/300 = 53.33%
-   Arc centre at SVG y=155 → 155/160 × 53.33% = 51.67% of dial height
-   Arc tip    at SVG y= 35 →  35/160 × 53.33% = 11.67% of dial height
-   Needle height = 51.67% − 11.67% = 40%
-
-   Rotation is around the needle's bottom-centre (= arc pivot).
-*/
-#needle {
-  position: absolute;
-  left: 50%;
-  margin-left: -2px;           /* centre a 4px-wide element */
-  bottom: 48.33%;              /* bottom edge sits at 51.67% from top */
-  width: 4px;
-  height: 40%;
-  background: var(--needle-col);
-  border-radius: 3px 3px 0 0;
-  clip-path: polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%);
-  transform-origin: 50% 100%;  /* rotate around bottom-centre = pivot */
-  transform: rotate(0deg);
-  transition: transform 0.12s ease-out, background-color 0.15s ease;
-  z-index: 2;
-}
-
-/* Decorative pivot hub */
-#needle::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #a88040, #5a3a10);
-  border: 1.5px solid var(--dial-border);
-  z-index: 3;
-}
-
-/* ── Note display — centred in lower half of dial ── */
+/* ── Note name ── */
 #note-display {
-  position: absolute;
-  left: 50%;
-  top: 63%;
-  transform: translateX(-50%);
-  font-family: 'Georgia', 'Courier New', serif;
-  font-size: clamp(2.5rem, 13vw, 4rem);
+  font-size: clamp(5rem, 28vw, 9rem);
   font-weight: bold;
-  color: var(--text-dark);
   line-height: 1;
-  letter-spacing: -0.02em;
-  z-index: 1;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  text-shadow:
+    0 0 12px var(--accent),
+    0 0 30px var(--accent-glow),
+    0 0 60px var(--accent-glow);
+  transition: color 0.15s ease, text-shadow 0.15s ease;
   white-space: nowrap;
 }
 
 #note-display.fade-in {
-  animation: fadeIn 0.15s ease-out;
+  animation: fadeIn 0.12s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-50%) scale(0.9); }
-  to   { opacity: 1; transform: translateX(-50%) scale(1); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Tuner bar wrap ── */
+#tuner-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* ── Horizontal bar ── */
+#tuner-bar {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  background: var(--surface);
+  border: 1px solid #2a2a2a;
+  border-radius: 2px;
+  /* Zone gradient: red / amber / cyan / amber / red */
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 23,  68,  0.25)  0%,
+    rgba(255, 23,  68,  0.25)  28%,
+    rgba(255, 171, 0,   0.25)  28%,
+    rgba(255, 171, 0,   0.25)  42%,
+    rgba(0,   229, 255, 0.18)  42%,
+    rgba(0,   229, 255, 0.18)  58%,
+    rgba(255, 171, 0,   0.25)  58%,
+    rgba(255, 171, 0,   0.25)  72%,
+    rgba(255, 23,  68,  0.25)  72%,
+    rgba(255, 23,  68,  0.25)  100%
+  );
+  box-shadow:
+    inset 0 1px 6px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* Center tick */
+#center-mark {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #3a3a3a;
+  transform: translateX(-50%);
+}
+
+/* ── Sliding needle ── */
+#bar-needle {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  left: 50%;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transform: translateX(-50%);
+  box-shadow:
+    0 0 6px  var(--accent),
+    0 0 14px var(--accent),
+    0 0 28px var(--accent-glow),
+    0 0 50px var(--accent-glow);
+  transition:
+    left            0.12s ease-out,
+    background      0.15s ease,
+    box-shadow      0.15s ease;
+  z-index: 2;
+}
+
+/* ── Bar labels ── */
+#bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: #3a3a3a;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* ── Cents readout ── */
 #cents-display {
-  font-size: 1.05rem;
-  color: #b0925a;
+  font-size: 1.1rem;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--accent-glow);
   min-height: 1.5em;
   text-align: center;
+  transition: color 0.15s ease, text-shadow 0.15s ease;
 }
 
-/* ── Toggle button — styled as physical hardware key ── */
+/* ── Toggle button ── */
 #btn-toggle {
-  background: var(--dial-face);
-  color: var(--text-dark);
-  border: 3px solid var(--dial-border);
-  border-radius: 999px;
-  padding: 0.6rem 2.2rem;
-  font-size: 1rem;
-  font-family: 'Georgia', serif;
-  font-weight: bold;
-  letter-spacing: 0.08em;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  padding: 0.65rem 2.2rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  letter-spacing: 0.2em;
   cursor: pointer;
-  box-shadow:
-    0 4px 0 #3d2b0e,
-    0 5px 10px rgba(0, 0, 0, 0.45);
-  transition: box-shadow 0.1s, transform 0.1s, background-color 0.2s;
+  box-shadow: 0 0 10px var(--accent-glow);
+  transition:
+    color        0.15s ease,
+    border-color 0.15s ease,
+    box-shadow   0.15s ease;
 }
 
 #btn-toggle:hover {
-  background: #fffdf5;
+  box-shadow: 0 0 18px var(--accent-glow), inset 0 0 8px rgba(255,255,255,0.03);
 }
 
 #btn-toggle:active {
-  box-shadow: 0 1px 0 #3d2b0e, 0 2px 4px rgba(0, 0, 0, 0.3);
-  transform: translateY(3px);
+  opacity: 0.7;
 }
 
 #btn-toggle.active {
-  border-color: var(--color-in-tune);
-  box-shadow:
-    0 4px 0 #1a5e35,
-    0 5px 10px rgba(0, 0, 0, 0.45);
+  /* glow driven by --accent, set from JS */
+  box-shadow: 0 0 14px var(--accent-glow);
 }

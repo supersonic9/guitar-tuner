@@ -28,15 +28,17 @@ btn.addEventListener('click', async () => {
     stopAudio = null;
     cancelClearTimer();
     lastNote = null;
-    btn.textContent = 'Start Tuning';
+    btn.textContent = 'START TUNING';
+    btn.classList.remove('active');
     updateDisplay(null, null);
     return;
   }
 
-  btn.textContent = 'Stop';
+  btn.textContent = 'STOP';
   btn.disabled = true;
 
   try {
+    btn.classList.add('active');
     stopAudio = await startListening((buffer, sampleRate) => {
       const hz = detectPitch(buffer, sampleRate);
       if (hz === null) {
@@ -62,7 +64,8 @@ btn.addEventListener('click', async () => {
     });
   } catch (err) {
     console.error('Mic access failed:', err);
-    btn.textContent = 'Start Tuning';
+    btn.textContent = 'START TUNING';
+    btn.classList.remove('active');
     stopAudio = null;
   } finally {
     btn.disabled = false;
